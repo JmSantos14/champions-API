@@ -1,30 +1,47 @@
+import { response } from "express";
+import { PlayerModel } from "../models/player-model";
 import * as PlayerRepository from "../repositories/players-repository";
-import { ok, noContent } from "../utils/http-helper";
+import * as httpResponse from "../utils/http-helper"
+
 
 
 export const getPlayerService = async () => {
-    const data = await PlayerRepository.findAllPlayers()
+    const data = await PlayerRepository.findAllPlayers();
 
     let response = null
 
     if(data) {
-        response = await ok(data)
+        response = await httpResponse.ok(data)
     }
     else {
-        response = await noContent()
+        response = await httpResponse.noContent()
     }
 
     return response;
 }
 
 export const getPlayerByIdService = async (id: number) => {
-    const data = await PlayerRepository.findAllPlayerById(id)
+    const data = await PlayerRepository.findPlayerById(id)
     let response = null
 
     if (data){
-        response = ok(data);
+        response = httpResponse.ok(data);
     } else {
-        response = noContent()
+        response = httpResponse.noContent()
     }
+    return response;
+}
+
+
+export const createPlayerService = async (player: PlayerModel) => {
+    let response = null;
+
+    if(Object.keys(player).length !== 0){
+        await PlayerRepository.insertPlayer(player)
+        response = httpResponse.created();
+    }else{
+        response = httpResponse.badRequest(); 
+    }
+
     return response;
 }

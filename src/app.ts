@@ -12,5 +12,3 @@ function createApp(){
 }
 
 export default createApp;
-
-// teste pos git
